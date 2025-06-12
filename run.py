@@ -1,6 +1,6 @@
 from app import create_app
 from config import Config
-import person_detection
+# import person_detection
 import os
 
 os.makedirs(Config.OUTPUT_DIR, exist_ok=True)
