@@ -1,4 +1,4 @@
-import numpy as np
+from numpy import *
 import cv2
 import os
 from config import Config
@@ -108,8 +108,8 @@ def forward_stitch(query_photo, train_photo):
             return None, None
 
         # Convert to proper format
-        result_float32 = np.float32(result)
-        mapped_float_32 = np.float32(mapped_feature_image)
+        result_float32 = float32(result)
+        mapped_float_32 = float32(mapped_feature_image)
 
         result_rgb = cv2.cvtColor(result_float32, cv2.COLOR_BGR2RGB)
         mapped_feature_image_rgb = cv2.cvtColor(mapped_float_32, cv2.COLOR_BGR2RGB)
@@ -150,7 +150,7 @@ def recurse_stitch(image_list, no_of_images):
             return None, None
 
         # Convert result back to uint8 and RGB
-        result_int8 = np.uint8(result)
+        result_int8 = uint8(result)
         result_rgb = cv2.cvtColor(result_int8, cv2.COLOR_BGR2RGB)
 
         # Replace the second-to-last image with the stitched result

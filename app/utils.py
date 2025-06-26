@@ -1,5 +1,5 @@
 import cv2
-import numpy as np
+from numpy import *
 from config import Config
 
 class ImageStitching:
@@ -104,12 +104,12 @@ class ImageStitching:
             tuple: (matches, homography_matrix, status) or None
         """
         try:
-            keypoints_train_image = np.float32([kp.pt for kp in keypoints_train_image])
-            keypoints_query_image = np.float32([kp.pt for kp in keypoints_query_image])
+            keypoints_train_image = float32([kp.pt for kp in keypoints_train_image])
+            keypoints_query_image = float32([kp.pt for kp in keypoints_query_image])
 
             if len(matches) >= Config.MIN_MATCH_COUNT:
-                points_train = np.float32([keypoints_train_image[m.queryIdx] for m in matches])
-                points_query = np.float32([keypoints_query_image[m.trainIdx] for m in matches])
+                points_train = float32([keypoints_train_image[m.queryIdx] for m in matches])
+                points_query = float32([keypoints_query_image[m.trainIdx] for m in matches])
 
                 H, status = cv2.findHomography(
                     points_train, points_query, cv2.RANSAC, reprojThresh
@@ -150,16 +150,16 @@ class ImageStitching:
 
             offset = int(self.smoothing_window_size / 2)
             barrier = query_image.shape[1] - int(self.smoothing_window_size / 2)
-            mask = np.zeros((height_panorama, width_panorama))
+            mask = zeros((height_panorama, width_panorama))
 
             if version == "left_image":
-                mask[:, barrier - offset: barrier + offset] = np.tile(
-                    np.linspace(1, 0, 2 * offset).T, (height_panorama, 1)
+                mask[:, barrier - offset: barrier + offset] = tile(
+                    linspace(1, 0, 2 * offset).T, (height_panorama, 1)
                 )
                 mask[:, : barrier - offset] = 1
             else:
-                mask[:, barrier - offset: barrier + offset] = np.tile(
-                    np.linspace(0, 1, 2 * offset).T, (height_panorama, 1)
+                mask[:, barrier - offset: barrier + offset] = tile(
+                    linspace(0, 1, 2 * offset).T, (height_panorama, 1)
                 )
                 mask[:, barrier + offset:] = 1
 
@@ -189,7 +189,7 @@ class ImageStitching:
             width_panorama = width_img1 + width_img2
 
             # Create panorama canvas
-            panorama1 = np.zeros((height_panorama, width_panorama, 3))
+            panorama1 = zeros((height_panorama, width_panorama, 3))
 
             # Create masks
             mask1 = self.create_mask(query_image, train_image, version="left_image")
@@ -212,7 +212,7 @@ class ImageStitching:
             result = panorama1 + panorama2
 
             # Crop out black borders
-            rows, cols = np.where(result[:, :, 0] != 0)
+            rows, cols = where(result[:, :, 0] != 0)
             if len(rows) > 0 and len(cols) > 0:
                 min_row, max_row = min(rows), max(rows) + 1
                 min_col, max_col = min(cols), max(cols) + 1
